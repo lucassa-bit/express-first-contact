@@ -1,20 +1,27 @@
+// ------------------------------------- Initialization ------------------------------- //
 const Express = require('express');
+const tourRouter = require(`./routes/tour_routes`);
+const userRouter = require(`./routes/user_routes`);
+
 const server = new Express();
+// ------------------------------------- Middleware ------------------------------- //
 
-server.get('/', (req, res) => {
-    res.status(200).send('Hello world');
+if (process.env.NODE_ENV === 'development') {
+  server.use(require('morgan')('dev'));
+}
+
+server.use(Express.json());
+server.use(Express.static(`${__dirname}/public`));
+
+server.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+
+  next();
 });
 
-server.get('/json', (req, res) => {
-    const response = {
-        message: 'HELLO WORLD',
-        app: "app.js"
-    }
-    res.status(201).json(response);
-});
+// Tours route
+server.use('/api/v1/tours', tourRouter);
+// User route
+server.use('/api/v1/users', userRouter);
 
-
-
-server.listen(8080, () => {
-    console.log('---------------------------------\n\t Server iniciado... \n---------------------------------')
-})
+module.exports = server;

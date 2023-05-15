@@ -48,9 +48,26 @@ const createTour = (req, res) => {
   );
 };
 
+const deleteTour = (req, res) => {
+  const index = tours.findIndex((value) => value.id === Number(req.params.id));
+
+  tours.splice(index, 1);
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
+    () => {
+      res.status(200).json({
+        status: 'Success',
+        message: 'Tour deleted sucessfully!!',
+      });
+    }
+  );
+};
+
 server.get('/api/v1/tours', getAllTours);
 server.get('/api/v1/tours/:id', getTour);
 server.post('/api/v1/tours', createTour);
+server.delete('/api/v1/tours/:id', deleteTour);
 
 server.listen(8080, () => {
   console.log(`
