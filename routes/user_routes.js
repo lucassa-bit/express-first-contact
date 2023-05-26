@@ -8,7 +8,11 @@ router.param('id', (req, res, next, value) => {
   next();
 });
 // ------------------------------------- Routing ------------------------------- //
-router.route('/').get(controller.getAllUsers).post(controller.createUser);
-router.route('/:id').get(controller.getUser).delete(controller.deleteUser);
+router.route('/')
+  .get(controller.getAllUsers)
+  .post(controller.createUser);
+router.route('/:id')
+  .get(controller.getUser)
+  .delete(controller.deleteUser);
 
 module.exports = router;
